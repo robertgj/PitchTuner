@@ -126,31 +126,28 @@ $ bin/PitchTuner --help
 Usage: PitchTuner [-?] [--file <str>] [--device <str>] 
 [--sample_rate <num>] [--channel <num>] [--latency_ms <num>] 
 [--subsample <num>] [--lpcutoff <num>] [--hpcutoff <num>] 
-[--disable_hp_filter] [--disable_agc] [--window_ms <num>]
-[--lags_ms <num>] [--sample_ms <num>] [--threshold <num>] 
-[--removeDC] [--A4Frequency <num>] [--pixels_per_inch <num>] 
-[--size_in_inches <num>] [--gui_test] [--debug]
-  -?, --help             	show help message
-  --file=<str>           	input file
-  --device=<str>         	input device
-  --sample_rate=<num>    	sample rate
-  --channel=<num>        	input device channel
-  --latency_ms=<num>     	device storage latency (ms)
-  --subsample=<num>      	waveform subsample ratio
-  --lpcutoff=<num>       	lowpass cutoff frequency
-  --hpcutoff=<num>       	highpass cutoff frequency
-  --disable_hp_filter    	disable highpass filter
-  --disable_agc          	disable AGC
-  --window_ms=<num>      	correlation window width (ms)
-  --lags_ms=<num>        	maximum correlation lags (ms)
-  --sample_ms=<num>      	pitch estimate interval (ms)
-  --threshold=<num>      	difference function maximum
-  --removeDC             	enable DC removal
-  --A4Frequency=<num>    	nominal A4 frequency
-  --pixels_per_inch=<num>	pixels per inch (50-300)
-  --size_in_inches=<num> 	frame size in inches (2-8)
-  --gui_test             	enable GUI testing
-  --debug                	enable debugging information
+[--disable_hp_filter] [--disable_agc] [--window_ms <num>] 
+[--lags_ms <num>] [--sample_ms <num>] [--threshold <double>] 
+[--removeDC] [--A4Frequency <num>] [--gui_test] [--debug]
+  -?, --help          	show help message
+  --file=<str>        	input file
+  --device=<str>      	input device
+  --sample_rate=<num> 	sample rate
+  --channel=<num>     	input device channel
+  --latency_ms=<num>  	device storage latency (ms)
+  --subsample=<num>   	waveform subsample ratio
+  --lpcutoff=<num>    	lowpass cutoff frequency
+  --hpcutoff=<num>    	highpass cutoff frequency
+  --disable_hp_filter 	disable highpass filter
+  --disable_agc       	disable AGC
+  --window_ms=<num>   	correlation window width (ms)
+  --lags_ms=<num>     	maximum correlation lags (ms)
+  --sample_ms=<num>   	pitch estimate interval (ms)
+  --threshold=<double>	difference function maximum
+  --removeDC          	enable DC removal
+  --A4Frequency=<num> 	nominal A4 frequency
+  --gui_test          	enable GUI testing
+  --debug             	enable debugging information
 ```
 
 ### Examples of pitch estimation

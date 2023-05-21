@@ -205,33 +205,30 @@ GUI</h2>
 <div class="line"><a class="code hl_function" href="AutomaticGainControl__test_8cc.html#ae28fba57a1edfa47dfb0ed05fb38131c">Usage</a>: <a class="code hl_class" href="classPitchTuner.html">PitchTuner</a> [-?] [--file &lt;str&gt;] [--device &lt;str&gt;] [--sample_rate &lt;num&gt;]</div>
 <div class="line">[--channel &lt;num&gt;] [--latency_ms &lt;num&gt;] [--subsample &lt;num&gt;] [--lpcutoff &lt;num&gt;]</div>
 <div class="line">[--hpcutoff &lt;num&gt;] [--disable_hp_filter] [--disable_agc] [--window_ms &lt;num&gt;]</div>
-<div class="line">[--lags_ms &lt;num&gt;] [--sample_ms &lt;num&gt;] [--threshold &lt;num&gt;] [--removeDC]</div>
-<div class="line">[--A4Frequency &lt;num&gt;] [--pixels_per_inch &lt;num&gt;] [--size_in_inches &lt;num&gt;]</div>
-<div class="line">[--gui_test] [--debug]</div>
-<div class="line">  -?, --help                show help message</div>
-<div class="line">  --file=&lt;str&gt;              input file</div>
-<div class="line">  --device=&lt;str&gt;            input device</div>
-<div class="line">  --sample_rate=&lt;num&gt;       sample rate</div>
-<div class="line">  --channel=&lt;num&gt;           input device channel</div>
-<div class="line">  --latency_ms=&lt;num&gt;        device storage latency (ms)</div>
-<div class="line">  --subsample=&lt;num&gt;         waveform subsample ratio</div>
-<div class="line">  --lpcutoff=&lt;num&gt;          lowpass cutoff frequency</div>
-<div class="line">  --hpcutoff=&lt;num&gt;          highpass cutoff frequency</div>
-<div class="line">  --disable_hp_filter       disable highpass filter</div>
-<div class="line">  --disable_agc             disable AGC</div>
-<div class="line">  --window_ms=&lt;num&gt;         correlation window width (ms)</div>
-<div class="line">  --lags_ms=&lt;num&gt;           maximum correlation lags (ms)</div>
-<div class="line">  --sample_ms=&lt;num&gt;         pitch estimate interval (ms)</div>
-<div class="line">  --threshold=&lt;num&gt;         difference function maximum</div>
-<div class="line">  --removeDC                enable DC removal</div>
-<div class="line">  --A4Frequency=&lt;num&gt;       nominal A4 frequency</div>
-<div class="line">  --pixels_per_inch=&lt;num&gt;   pixels per inch (50-300)</div>
-<div class="line">  --size_in_inches=&lt;num&gt;    frame size in inches (2-8)</div>
-<div class="line">  --gui_test                enable GUI testing</div>
-<div class="line">  --debug                   enable debugging information</div>
+<div class="line">[--lags_ms &lt;num&gt;] [--sample_ms &lt;num&gt;] [--threshold &lt;double&gt;] [--removeDC]</div>
+<div class="line">[--A4Frequency &lt;num&gt;] [--gui_test] [--debug]</div>
+<div class="line">  -?, --help            show help message</div>
+<div class="line">  --file=&lt;str&gt;          input file</div>
+<div class="line">  --device=&lt;str&gt;        input device</div>
+<div class="line">  --sample_rate=&lt;num&gt;   sample rate</div>
+<div class="line">  --channel=&lt;num&gt;       input device channel</div>
+<div class="line">  --latency_ms=&lt;num&gt;    device storage latency (ms)</div>
+<div class="line">  --subsample=&lt;num&gt;     waveform subsample ratio</div>
+<div class="line">  --lpcutoff=&lt;num&gt;      lowpass cutoff frequency</div>
+<div class="line">  --hpcutoff=&lt;num&gt;      highpass cutoff frequency</div>
+<div class="line">  --disable_hp_filter   disable highpass filter</div>
+<div class="line">  --disable_agc         disable AGC</div>
+<div class="line">  --window_ms=&lt;num&gt;     correlation window width (ms)</div>
+<div class="line">  --lags_ms=&lt;num&gt;       maximum correlation lags (ms)</div>
+<div class="line">  --sample_ms=&lt;num&gt;     pitch estimate interval (ms)</div>
+<div class="line">  --threshold=&lt;<span class="keywordtype">double</span>&gt;  difference function maximum</div>
+<div class="line">  --removeDC            enable DC removal</div>
+<div class="line">  --A4Frequency=&lt;num&gt;   nominal A4 frequency</div>
+<div class="line">  --gui_test            enable GUI testing</div>
+<div class="line">  --debug               enable debugging information</div>
 <div class="ttc" id="aAutomaticGainControl__test_8cc_html_ae28fba57a1edfa47dfb0ed05fb38131c"><div class="ttname"><a href="AutomaticGainControl__test_8cc.html#ae28fba57a1edfa47dfb0ed05fb38131c">Usage</a></div><div class="ttdeci">static void Usage()</div><div class="ttdef"><b>Definition:</b> <a href="AutomaticGainControl__test_8cc_source.html#l00031">AutomaticGainControl_test.cc:31</a></div></div>
-<div class="ttc" id="aclassPitchTuner_html"><div class="ttname"><a href="classPitchTuner.html">PitchTuner</a></div><div class="ttdef"><b>Definition:</b> <a href="PitchTuner_8cc_source.html#l00089">PitchTuner.cc:90</a></div></div>
-</div><!-- fragment --><p>On my system, wxWidgets returns a display PPI of \(96\) rather than the expected value of \(157\). The <em>--size_in_inches</em> and <em>--pixels_per_inch</em> options overide the default size of the GUI.</p>
+<div class="ttc" id="aclassPitchTuner_html"><div class="ttname"><a href="classPitchTuner.html">PitchTuner</a></div><div class="ttdef"><b>Definition:</b> <a href="PitchTuner_8cc_source.html#l00085">PitchTuner.cc:86</a></div></div>
+</div><!-- fragment --><p>On my system, wxWidgets returns a display PPI of \(96\) rather than the expected value of \(157\) and resizing the frame to \(2000\) pixels or more causes problems.</p>
 <p>Here is a screenshot of the GUI with <em>tinwhistleD5.wav</em> and <em>pavucontrol</em> set to record from the "Monitor of Built-in Audio": </p><div class="image">
 <img src="GUI.png" alt=""/>
 </div>

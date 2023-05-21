@@ -106,6 +106,7 @@ PitchTunerFrame::PitchTunerFrame( wxString fileName,
   : wxFrame((wxFrame *)NULL, wxID_ANY, wxT("PitchTuner"),
             wxDefaultPosition,
             frameSize,
+            wxCLIP_CHILDREN|wxRESIZE_BORDER|
             wxSYSTEM_MENU|wxCAPTION|wxCLOSE_BOX),
   m_fileName(fileName),
   m_deviceName(deviceName),

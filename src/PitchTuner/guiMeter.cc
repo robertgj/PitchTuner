@@ -13,58 +13,83 @@ using namespace PitchTunerGui;
 IMPLEMENT_CLASS( guiMeter, wxWindow )
 
 BEGIN_EVENT_TABLE( guiMeter, wxWindow )
+EVT_SIZE( guiMeter::OnSize )
 EVT_PAINT( guiMeter::OnPaint )
 END_EVENT_TABLE()
 
-void guiMeter::OnPaint( wxPaintEvent &WXUNUSED(event) )
+void guiMeter::RePaint()
 {
-  // Don't paint the meter until the client size is known
-  if (m_guiDialBitmap == 0)
-    {
-      m_w = GetParent()->GetClientSize().GetWidth();
-      m_h = GetParent()->GetClientSize().GetHeight();
-      m_ptrOriginX = 0.5*m_w;
-      m_ptrOriginY = 0.75*m_h;
-      m_dialRadius = 0.35*m_w/sin(m_ptrMaxAngle*pi/180.0); 
-      m_dotLeftX = 0.2*m_w;
-      m_dotRightX = 0.8*m_w;
-      m_dotY = 0.1*m_w;
-      m_dotRadius = 0.025*m_w;
-      fontUnits = wxFont(0.025*m_h,
-                         wxFONTFAMILY_SWISS,
-                         wxFONTSTYLE_NORMAL,
-                         wxFONTWEIGHT_NORMAL);
-      fontTicks = wxFont(0.025*m_h,
-                         wxFONTFAMILY_SWISS,
-                         wxFONTSTYLE_NORMAL,
-                         wxFONTWEIGHT_NORMAL);
-      fontName = wxFont(0.05*m_h,
-                        wxFONTFAMILY_SWISS,
-                        wxFONTSTYLE_NORMAL,
-                        wxFONTWEIGHT_NORMAL);
-      fontFrequency = wxFont(0.05*m_h,
-                             wxFONTFAMILY_SWISS,
-                             wxFONTSTYLE_NORMAL,
-                             wxFONTWEIGHT_NORMAL);
-      fontPitch = wxFont(0.035*m_h,
-                         wxFONTFAMILY_SWISS,
-                         wxFONTSTYLE_NORMAL,
-                         wxFONTWEIGHT_NORMAL);
-      m_guiDialBitmap = new wxBitmap(m_w, m_h);
-
-      // Draw the fixed dial elements
-      wxMemoryDC guiDialDC;
-      guiDialDC.SelectObject(*m_guiDialBitmap);
-      DrawDial(guiDialDC);
-    }
-
-  // Draw the changeable dial elements
-  wxAutoBufferedPaintDC guiMeterDC( this );
-  guiMeterDC.DrawBitmap(*m_guiDialBitmap, 0, 0);
-  DrawUpdate(guiMeterDC);
+  Refresh();
+  Update();
+}
+    
+void guiMeter::OnSize(wxSizeEvent &WXUNUSED(event))
+{
+  RePaint();
 }
 
-void guiMeter::DrawDial(wxMemoryDC &guiDialDC)
+void guiMeter::OnPaint( wxPaintEvent &WXUNUSED(event) )
+{
+
+  // Draw the fixed dial elements
+  if ( (m_w != GetParent()->GetClientSize().GetWidth()) ||
+       (m_h != GetParent()->GetClientSize().GetWidth()) )
+    {
+      if (m_guiDialBitmap)
+        {
+          delete m_guiDialBitmap;
+        }
+
+      InitGuiDial();
+
+      m_guiDialBitmap = new wxBitmap(m_w, m_h);
+
+      wxMemoryDC guiDialDC;
+      guiDialDC.SelectObject(*m_guiDialBitmap);
+      DrawGuiDial(guiDialDC);
+    }
+  
+  // Draw the updated dial elements
+  wxAutoBufferedPaintDC guiMeterDC( this );
+  guiMeterDC.DrawBitmap(*m_guiDialBitmap, 0, 0);
+  DrawGuiUpdate(guiMeterDC);
+}
+
+void guiMeter::InitGuiDial()
+{
+  m_w = GetParent()->GetClientSize().GetWidth();
+  m_h = GetParent()->GetClientSize().GetHeight();
+  m_ptrOriginX = 0.5*m_w;
+  m_ptrOriginY = 0.75*m_h;
+  m_dialRadius = 0.35*m_w/sin(m_ptrMaxAngle*pi/180.0);
+  m_pointerWidth = m_dialRadius/50;
+  m_dotLeftX = 0.2*m_w;
+  m_dotRightX = 0.8*m_w;
+  m_dotY = 0.1*m_w;
+  m_dotRadius = 0.025*m_w;
+  fontUnits = wxFont(0.025*m_h,
+                     wxFONTFAMILY_SWISS,
+                     wxFONTSTYLE_NORMAL,
+                     wxFONTWEIGHT_NORMAL);
+  fontTicks = wxFont(0.025*m_h,
+                     wxFONTFAMILY_SWISS,
+                     wxFONTSTYLE_NORMAL,
+                     wxFONTWEIGHT_NORMAL);
+  fontName = wxFont(0.05*m_h,
+                    wxFONTFAMILY_SWISS,
+                    wxFONTSTYLE_NORMAL,
+                    wxFONTWEIGHT_NORMAL);
+  fontFrequency = wxFont(0.05*m_h,
+                         wxFONTFAMILY_SWISS,
+                         wxFONTSTYLE_NORMAL,
+                         wxFONTWEIGHT_NORMAL);
+  fontPitch = wxFont(0.035*m_h,
+                     wxFONTFAMILY_SWISS,
+                     wxFONTSTYLE_NORMAL,
+                     wxFONTWEIGHT_NORMAL);
+}
+
+void guiMeter::DrawGuiDial(wxMemoryDC &guiDialDC)
 {
   // Clear bitmap
   wxPen pen (*wxWHITE, 1);
@@ -148,7 +173,7 @@ void guiMeter::DrawDial(wxMemoryDC &guiDialDC)
     }
 }
 
-void guiMeter::DrawUpdate(wxAutoBufferedPaintDC &guiMeterDC)
+void guiMeter::DrawGuiUpdate(wxAutoBufferedPaintDC &guiMeterDC)
 {
   // Set the pen
   wxPen pen (*wxBLACK, 1);
@@ -207,7 +232,7 @@ void guiMeter::DrawUpdate(wxAutoBufferedPaintDC &guiMeterDC)
       int ptrLength = 0.975*m_dialRadius;
       int ptrEndX = m_ptrOriginX + (ptrLength*sin(angle*pi/180));
       int ptrEndY = m_ptrOriginY - (ptrLength*cos(angle*pi/180));
-      pen.SetWidth(3);
+      pen.SetWidth(m_pointerWidth);
       guiMeterDC.SetPen(pen);
       guiMeterDC.DrawLine(m_ptrOriginX, m_ptrOriginY, ptrEndX, ptrEndY);
     }

@@ -223,35 +223,32 @@ $ bin/PitchTuner --help
 Usage: PitchTuner [-?] [--file <str>] [--device <str>] [--sample_rate <num>]
 [--channel <num>] [--latency_ms <num>] [--subsample <num>] [--lpcutoff <num>]
 [--hpcutoff <num>] [--disable_hp_filter] [--disable_agc] [--window_ms <num>]
-[--lags_ms <num>] [--sample_ms <num>] [--threshold <num>] [--removeDC]
-[--A4Frequency <num>] [--pixels_per_inch <num>] [--size_in_inches <num>]
-[--gui_test] [--debug]
-  -?, --help             	show help message
-  --file=<str>           	input file
-  --device=<str>         	input device
-  --sample_rate=<num>    	sample rate
-  --channel=<num>        	input device channel
-  --latency_ms=<num>     	device storage latency (ms)
-  --subsample=<num>      	waveform subsample ratio
-  --lpcutoff=<num>       	lowpass cutoff frequency
-  --hpcutoff=<num>       	highpass cutoff frequency
-  --disable_hp_filter    	disable highpass filter
-  --disable_agc          	disable AGC
-  --window_ms=<num>      	correlation window width (ms)
-  --lags_ms=<num>        	maximum correlation lags (ms)
-  --sample_ms=<num>      	pitch estimate interval (ms)
-  --threshold=<num>      	difference function maximum
-  --removeDC             	enable DC removal
-  --A4Frequency=<num>    	nominal A4 frequency
-  --pixels_per_inch=<num>	pixels per inch (50-300)
-  --size_in_inches=<num> 	frame size in inches (2-8)
-  --gui_test             	enable GUI testing
-  --debug                	enable debugging information
+[--lags_ms <num>] [--sample_ms <num>] [--threshold <double>] [--removeDC]
+[--A4Frequency <num>] [--gui_test] [--debug]
+  -?, --help          	show help message
+  --file=<str>        	input file
+  --device=<str>      	input device
+  --sample_rate=<num> 	sample rate
+  --channel=<num>     	input device channel
+  --latency_ms=<num>  	device storage latency (ms)
+  --subsample=<num>   	waveform subsample ratio
+  --lpcutoff=<num>    	lowpass cutoff frequency
+  --hpcutoff=<num>    	highpass cutoff frequency
+  --disable_hp_filter 	disable highpass filter
+  --disable_agc       	disable AGC
+  --window_ms=<num>   	correlation window width (ms)
+  --lags_ms=<num>     	maximum correlation lags (ms)
+  --sample_ms=<num>   	pitch estimate interval (ms)
+  --threshold=<double>	difference function maximum
+  --removeDC          	enable DC removal
+  --A4Frequency=<num> 	nominal A4 frequency
+  --gui_test          	enable GUI testing
+  --debug             	enable debugging information
  \endcode
  
  On my system, wxWidgets returns a display PPI of \f$96\f$ rather than the
- expected value of \f$157\f$. The \e --size_in_inches and \e --pixels_per_inch
- options overide the default size of the GUI.
+ expected value of \f$157\f$ and resizing the frame to \f$2000\f$ pixels or more
+ causes problems. 
 
  Here is a screenshot of the GUI with \e tinwhistleD5.wav and \e pavucontrol set
  to record from the "Monitor of Built-in Audio":

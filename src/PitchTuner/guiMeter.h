@@ -32,6 +32,7 @@ namespace PitchTunerGui
       m_ptrOriginX(0),
       m_ptrOriginY(0),
       m_dialRadius(0),
+      m_pointerWidth(0),
       m_dotLeftX(0),
       m_dotRightX(0),
       m_dotY(0),
@@ -73,11 +74,7 @@ namespace PitchTunerGui
       m_name = name;
     }
     
-    void RePaint()
-    {
-      Refresh(); Update();
-    }
-    
+    void RePaint();
     
   private:
     // Disallow copy constructor of guiMeter
@@ -86,8 +83,10 @@ namespace PitchTunerGui
     guiMeter& operator=(const guiMeter&);
 
     void OnPaint(wxPaintEvent& event);
-    void DrawDial(wxMemoryDC &guiDialDC);
-    void DrawUpdate(wxAutoBufferedPaintDC &dc);
+    void OnSize(wxSizeEvent& event);
+    void InitGuiDial();
+    void DrawGuiDial(wxMemoryDC &guiDialDC);
+    void DrawGuiUpdate(wxAutoBufferedPaintDC &dc);
 
     wxString m_name;
     wxString m_units;
@@ -102,6 +101,7 @@ namespace PitchTunerGui
     int m_ptrOriginX;
     int m_ptrOriginY;
     int m_dialRadius;
+    int m_pointerWidth;
     wxCoord m_dotLeftX;
     wxCoord m_dotRightX;
     wxCoord m_dotY;

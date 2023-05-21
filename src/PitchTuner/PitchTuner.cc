@@ -41,7 +41,7 @@ typedef struct optionsPitchTuner_t {
   /// Read audio waveform from this device
   wxString optionDeviceName = "default";
   /// Sample rate
-  double optionSampleRate = 48000;
+  long optionSampleRate = 48000;
   /// Audio device channel
   long optionChannel = 0;
   /// Audio device input buffer storage
@@ -50,9 +50,9 @@ typedef struct optionsPitchTuner_t {
   /// Subsample the audio waveform after lowpass filtering
   long optionSubSample = 2;
   /// Low pass filter cutoff frequency 
-  double optionInputLpFilterCutoff = 1000;
+  long optionInputLpFilterCutoff = 1000;
   /// High pass filter cutoff frequency 
-  double optionBaseLineHpFilterCutoff = 200;
+  long optionBaseLineHpFilterCutoff = 200;
   /// Disable the high pass filter
   bool optionDisableHpFilter = false;
   /// Disable the pre-processor AGC
@@ -69,19 +69,15 @@ typedef struct optionsPitchTuner_t {
   /// Remove DC value from correlation 
   bool optionRemoveDC = true;
   /// Nominal A4 frequency
-  double optionA4Frequency = 440;
+  long optionA4Frequency = 440;
   /// Debugging options
   /// Enable driving the GUI with fake pitch estimates 
   bool optionGuiTest = false;
   /// Enable storage of debugging information
   bool optionDebug = false;
   /// GUI options
-  /// Display pixels per inch
-  long optionPixelsPerInch = 96;
-  /// Frame size in inches
-  double optionFrameSizeInches = 4.0;
   /// Frame size in pixels
-  wxSize optionFrameSize = wxDefaultSize;
+  wxSize optionFrameSize = wxSize(400,400);
 } optionsPitchTuner_t;
 
 /// \class PitchTuner
@@ -174,14 +170,10 @@ bool PitchTuner::ParseOptions( optionsPitchTuner_t &options )
       { wxCMD_LINE_OPTION, NULL, "sample_ms", "pitch estimate interval (ms)", 
         wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL},
       { wxCMD_LINE_OPTION, NULL, "threshold", "difference function maximum", 
-        wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL},
+        wxCMD_LINE_VAL_DOUBLE, wxCMD_LINE_PARAM_OPTIONAL},
       { wxCMD_LINE_SWITCH, NULL,  "removeDC", "enable DC removal",
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
       { wxCMD_LINE_OPTION, NULL, "A4Frequency", "nominal A4 frequency", 
-        wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL},
-      { wxCMD_LINE_OPTION, NULL, "pixels_per_inch", "pixels per inch (50-300)", 
-        wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL},
-      { wxCMD_LINE_OPTION, NULL, "size_in_inches", "frame size in inches (2-8)", 
         wxCMD_LINE_VAL_NUMBER, wxCMD_LINE_PARAM_OPTIONAL},
       { wxCMD_LINE_SWITCH, NULL,  "gui_test", "enable GUI testing",
         wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL },
@@ -220,58 +212,6 @@ bool PitchTuner::ParseOptions( optionsPitchTuner_t &options )
   options.optionGuiTest = parser.Found("gui_test");
   options.optionDebug = parser.Found("debug");
 
-  // Set display pixels per inch
-  // On my system GetPPI() returns 96 DPI instead of the expected value.
-  wxSize display_pixels_per_inch = wxScreenDC().GetPPI();
-  static const long min_pixels_per_inch = 50l;
-  static const long max_pixels_per_inch = 300l;
-  if ( parser.Found("pixels_per_inch", &(options.optionPixelsPerInch)) )
-    {
-      if( options.optionPixelsPerInch <= min_pixels_per_inch )
-        {
-          options.optionPixelsPerInch = min_pixels_per_inch;
-        }
-      else if( options.optionPixelsPerInch >= max_pixels_per_inch )
-        {
-          options.optionPixelsPerInch = max_pixels_per_inch;
-        }
-      
-      display_pixels_per_inch = wxSize((int)options.optionPixelsPerInch,
-                                       (int)options.optionPixelsPerInch);
-    }
-
-  if ( options.optionDebug )
-    {
-      std::cerr << wxString::Format(wxT("Display PPI = %d,%d\n"),
-                                    display_pixels_per_inch.GetWidth(),   
-                                    display_pixels_per_inch.GetHeight());
-    }
-
-  // Set frame size
-  static const double min_size_in_inches = 2.0;
-  static const double max_size_in_inches = 8.0;
-  if ( parser.Found("size_in_inches", &options.optionFrameSizeInches) )
-    {
-      if ( options.optionFrameSizeInches < min_size_in_inches )
-        {
-          options.optionFrameSizeInches = min_size_in_inches;
-        }
-      else if ( options.optionFrameSizeInches > max_size_in_inches )
-        {
-          options.optionFrameSizeInches = max_size_in_inches;
-        }
-    }
-
-  if ( options.optionDebug )
-    {
-      std::cerr << wxString::Format(wxT("Size = %f inches\n"),
-                                    options.optionFrameSizeInches);
-    }
-  
-  options.optionFrameSize =
-    options.optionFrameSizeInches*display_pixels_per_inch;
-
-  
   if ( options.optionDebug )
     {
       std::cerr << "optionFileName "
@@ -310,14 +250,14 @@ bool PitchTuner::ParseOptions( optionsPitchTuner_t &options )
                 << options.optionGuiTest << std::endl;
       std::cerr << "optionDebug "
                 << options.optionDebug << std::endl;
-      std::cerr << "optionPixelsPerInch "
-                << options.optionPixelsPerInch << std::endl;
-      std::cerr << "optionFrameSizeInches "
-                << options.optionFrameSizeInches << std::endl;
       std::cerr << "optionFrameSize.GetHeight() "
                 << options.optionFrameSize.GetHeight() << std::endl;
       std::cerr << "optionFrameSize.GetWidth() "
                 << options.optionFrameSize.GetWidth() << std::endl;
+      std::cerr << "wxScreenDC().GetPPI().GetHeight() "
+                << wxScreenDC().GetPPI().GetHeight() << std::endl;
+      std::cerr << "wxScreenDC().GetPPI().GetWidth() "
+                << wxScreenDC().GetPPI().GetWidth() << std::endl;
     }
   
   return true;
