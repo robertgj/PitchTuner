@@ -1,0 +1,30 @@
+VPATH += $(DOCS)/latex
+
+CLEAN_LATEX_SUFFIXES := .aux .bbl .blg .brf .dvi .out .toc .lof .lot .loa .log \
+.pdf .synctex.gz
+
+CLEAN_SUFFIXES+=$(CLEAN_LATEX_SUFFIXES)
+
+PDFLATEX := pdflatex -interaction=nonstopmode -output-directory=$(DOCS)/latex
+BIBTEX := bibtex
+
+# Documentation template for LaTeX
+define latex_documentation_template =
+
+ifneq ($(strip ${1}),)
+
+$(DOCS)/latex/$(strip ${1}).pdf : $(strip ${1}).tex $(strip ${1}).bib
+	$(PDFLATEX) $(DOCS)/latex/$(strip ${1})
+	BIBINPUTS=$(DOCS)/latex $(BIBTEX) $(DOCS)/latex/$(strip ${1})
+	$(PDFLATEX) $(DOCS)/latex/$(strip ${1})
+	$(PDFLATEX) $(DOCS)/latex/$(strip ${1})
+	$(PDFLATEX) $(DOCS)/latex/$(strip ${1})
+	$(PDFLATEX) $(DOCS)/latex/$(strip ${1})
+
+.PHONY: $(strip ${1})_latex
+$(strip ${1})_latex : $(DOCS)/latex/$(strip ${1}).pdf
+	
+endif
+
+endef # latex_documentation_template
+

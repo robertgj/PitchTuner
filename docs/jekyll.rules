@@ -1,0 +1,16 @@
+# For github and jekyll
+
+JEKYLL_OPTS=--config $(DOCS)/_config.yml --source $(DOCS) \
+--destination $(DOCS)/_site
+
+CLEAN_DIRS += $(addprefix $(DOCS)/, \
+_site .sass-cache .jekyll-cache .jekyll-metadata)
+
+.PHONY: jekyll
+jekyll: clean cleanjekyll
+	jekyll serve $(JEKYLL_OPTS)
+
+.PHONY: cleanjekyll
+cleanjekyll:    
+	-@jekyll clean $(JEKYLL_OPTS)
+

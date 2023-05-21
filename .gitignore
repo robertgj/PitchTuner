@@ -1,32 +1,23 @@
-# Prerequisites
+*~
 *.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
 *.a
-*.lib
+*.o
+*,D
+*,B
+_site
+.sass-cache
+.jekyll-cache
+.jekyll-metadata
+obj
+bin
+octave-workspace
+aegis.conf
+docs/doxygen/project_number.cfg
+/*.abc
+/*.mid
+/*.wav
+/*.png
+/*.txt
+/*.tex
+/*.md
 
-# Executables
-*.exe
-*.out
-*.app

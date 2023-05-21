@@ -1,0 +1,411 @@
+# make.rules
+#
+#
+# make.rules is based on the ideas of:
+#
+#    1. "boilermake" by Dan Moulding, licensed under the GNU GPL-3.0 licence
+#          https://github.com/dmoulding/boilermake
+#
+#    2. "Recursive Make Considered Harmful" by Peter Miller
+#          http://aegis.sourceforge.net/auug97.pdf
+#
+#
+#
+# make.rules contains GNU make rules intended to be common to all projects. 
+#
+# The directory structure is assumed to be 
+#
+# top--- doc
+#     |- src--- src-subdirectory-1
+#     |      |- src-subdirectory-2 ---
+#     |      |                      |- src-sub-subdirectory 
+#     |      |                      |- etc ...
+#     |      |- etc ...
+#     |      
+#     |- obj (.d dependency and .o object files, listing files)
+#     |- bin (executable files and target flash files, symbol dump files)
+#
+# obj and bin will be created by make
+# 
+# The top-level contains the Makefile. It includes .mk files from the 
+# sub-directories to be searched and this make.rules file. The file names 
+# referred to by the included .mk files must be unique. Each sub-directory
+# in the doc and src hierarchies contains a .mk file that:
+#  - adds the directory to VPATH if it contains source files
+#  - adds source files for a program or library called xyz to 
+#    $(xyz_C_SOURCES), $(xyz_CXX_SOURCES) or $(xyz_ASM_SOURCES)
+#  - adds the static libraries in this directory to $(STATIC_LIBRARIES)
+#  - adds the programs (ie: xyz) in this directory to $(PROGRAMS)
+#  - defines extra or alternative flags on the object and program files
+#    added in this directory. (For example, when cross-compiling, it may
+#    redefine the CC flag).
+#  - usually do not define any templates (additional templates may be 
+#    required for a special purpose eg: programming target device flash)
+#  - includes .mk files from subdirectories
+#
+# For example the src/src.mk file may be:
+#
+#    include src/xyz/xyz.mk
+#
+# with xyz.mk:
+#
+#    PROGRAMS += xyz
+#    VPATH += src/xyz
+#    xyz_C_SOURCES := xyz.c
+#    $(OBJ)/xyz.o : CFLAGS += -Wno-error
+#
+# This build system assumes that source files are only declared once. A
+# source file that is used by more than one program must be placed in a 
+# static library. 
+#
+# Note that if you use source files xyz/abc.c and  XYZ/abc.cc then you will
+# have problems (since both map to obj/abc.d and obj/abc.o).
+#
+# Note that when calling the make $(call ...) function white space before
+# the argument is retained. For example:
+#
+#  EXAMPLE:=AAA
+#  $(foreach example, $(EXAMPLES), $(eval $(call example_template, $(example))))
+#                                                                 T 
+# passes ${1} as " AAA", not "AAA". The problem is the space here ^. 
+# To get the expected behaviour remove the leading space in the argument 
+# to $(call ...), or, in the macro, use the "$(strip arg)" function.
+#
+
+#
+# Initialise
+#
+SHELL=/bin/sh
+.DEFAULT_GOAL=all
+# Only search for files with these suffixes
+.SUFFIXES:
+.SUFFIXES: .s .h .c .cc .d .o
+
+# What is our operating system
+OS := $(shell uname -o)
+
+# Find source files in these directories
+VPATH:=$(INCLUDES)
+
+# Store object and dependency files here
+OBJ:=obj
+
+# Store programs here
+BIN:=bin
+
+# Documentation is here
+DOCS:=docs
+
+# Build documentation in this list
+DOCUMENTATION:=
+
+# Build the static libraries in this list
+STATIC_LIBRARIES:=
+
+# Build the programs in this list
+PROGRAMS:=
+
+# Remove these temporary files
+CLEAN_SUFFIXES:=\~ .o .bin .a .dmp .elf .log .lst .map ,B ,D
+CLEAN_FILES:= TAGS cscope.*
+CLEAN_DIRS:= $(OBJ) $(BIN)
+
+#
+# Common compiler and linker flags
+#
+
+# Host C compiler
+OPTIM_DEFAULTS:=-DNDEBUG -DDEBUG=0 -ggdb3 -flto=8 -ffat-lto-objects
+ifeq ($(PORT), debug)
+     OPTIM := -DDEBUG=1 -ggdb3 -O0
+else ifeq ($(PORT), sanitize)
+     # -fsanitize with -O2 and -O3 gives NULL dereference false positives?!?
+     OPTIM := $(OPTIM_DEFAULTS) -O1 \
+     -fsanitize=undefined -fsanitize=address -fsanitize=leak -fsanitize=shift \
+     -fsanitize=integer-divide-by-zero -fsanitize=unreachable -fsanitize=null \
+     -fsanitize=return -fsanitize=signed-integer-overflow -fsanitize=bounds \
+     -fsanitize=bounds-strict -fsanitize=alignment -fsanitize=object-size \
+     -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow \
+     -fsanitize=nonnull-attribute -fsanitize=returns-nonnull-attribute \
+     -fsanitize=bool -fsanitize=enum -fsanitize=vptr -fsanitize=builtin \
+     -fsanitize=pointer-overflow -fsanitize=pointer-compare \
+     -fsanitize-address-use-after-scope
+else ifeq ($(PORT), yacc)
+     OPTIM := $(OPTIM_DEFAULTS) -O0 -DYACC_DEBUGGING
+     LFLAGS:= -d
+else ifeq ($(PORT), coverage)
+     OPTIM := $(OPTIM_DEFAULTS) -O3 -pg -fprofile-arcs -ftest-coverage
+else ifeq ($(PORT), profile)
+     OPTIM := $(OPTIM_DEFAULTS) -O3 -pg
+else ifeq ($(PORT), small)
+     OPTIM := $(OPTIM_DEFAULTS) -Os
+else ifeq ($(PORT), fast)
+     OPTIM := $(OPTIM_DEFAULTS) -O3
+else
+     OPTIM := $(OPTIM_DEFAULTS) -O3
+endif
+
+YACC:=bison -d
+YFLAGS:= -y -b y
+LEX:=flex
+LFLAGS:= 
+CC:=gcc
+CXX:=g++
+LD:=$(CC)
+AR:=$(CC)-ar
+RANLIB:=ranlib
+OBJCPY:=objcopy
+OBJDMP:=objdump
+SIZE:=size
+ECHO:=echo
+LS:=ls -l
+
+COMMON_CFLAGS:= -static -pedantic-errors \
+-ffunction-sections -fdata-sections -fno-common -fstack-usage \
+-Werror -Wall -Wextra -Wshadow -Wpointer-arith -Wsign-compare -Wcast-qual \
+-Wcast-align -Winline -Wredundant-decls -Wchar-subscripts -Wwrite-strings \
+-Wformat=2 -Wundef -Wconversion -Wdouble-promotion -Wunused-function
+
+EXTRA_CFLAGS:= -Wstrict-prototypes -Wbad-function-cast -Wnested-externs
+# The following are not accepted by clang
+EXTRA_CFLAGS+=-Wformat-truncation -fanalyzer # -Wanalyzer-too-complex
+
+CFLAGS:=-std=c17 $(OPTIM) $(COMMON_CFLAGS) $(EXTRA_CFLAGS)
+
+# g++ -fanalyzer is still experimental!
+CXXFLAGS:=-std=c++20 $(OPTIM) $(COMMON_CFLAGS)
+
+ASFLAGS:=$(OPTIM)
+
+LDFLAGS:=$(OPTIM) -Wl,--gc-sections # -Wl,--print-gc-sections
+
+LIBS:= -lc -lm
+
+ARFLAGS:=crs 
+CPFLAGS:=-O binary
+ODFLAGS:=-x -S -D
+
+#
+# Implicit rules
+#
+
+# For lex and yacc
+%.c: %.y
+	$(YACC) $(YFLAGS) -o $@ $<
+
+%.c: %.l
+	$(LEX) $(LFLAGS) -o $@ $<
+
+# For source files 
+$(OBJ)/%.d: %.cc
+	-@$(CXX) -MM -MG -MF $@ -MT $(@:%.d=%.o) $(CXXFLAGS) $<
+
+$(OBJ)/%.d: %.c
+	-@$(CC) -MM -MG -MF $@ -MT $(@:%.d=%.o) $(CFLAGS) $<
+
+$(OBJ)/%.d: %.s
+	-@$(AS) -MM -MG -MF $@ -MT $(@:%.d=%.o) $(ASFLAGS) $<
+
+$(OBJ)/%.o: %.cc
+	$(CXX) -c -o $@ $(CXXFLAGS) $< 
+
+$(OBJ)/%.o: %.c
+	$(CC) -c -o $@ $(CFLAGS) $< 
+
+$(OBJ)/%.o: %.s
+	$(AS) -c -o $@ $(ASFLAGS) $< > $(@:%.o=%.lst)
+
+#
+# Macro to include a top-level source directory
+#
+# Use this so that default variables and implicit rules are defined first
+#
+source_dir_include_macro = include ${1}/${1}.mk
+
+#
+# Macros for expanding dependent files from a list of source files
+#
+c_source_expand_depends_macro = ${1:%.c=$(OBJ)/%.d} ${1:%.c=$(OBJ)/%.o}
+cxx_source_expand_depends_macro = ${1:%.cc=$(OBJ)/%.d} ${1:%.cc=$(OBJ)/%.o}
+asm_source_expand_depends_macro = ${1:%.s=$(OBJ)/%.d} ${1:%.s=$(OBJ)/%.o}
+
+#
+# Macros for adding a .d file dependency on a source file
+#
+c_source_dependency_file_macro = $(OBJ)/${1:%.c=%.d}: ${1} | $(OBJ)
+cxx_source_dependency_file_macro = $(OBJ)/${1:%.cc=%.d}: ${1} | $(OBJ)
+asm_source_dependency_file_macro = $(OBJ)/${1:%.s=%.d}: ${1} | $(OBJ)
+
+#
+# Macros for adding extra flags on a specific source file
+#
+# The "private" modifier allows me to have a sub-tree of source files
+# with an additional rules file for a different CPU target.
+# See GNU make info, Section 6.13 "Suppressing Inheritance".
+#
+add_extra_CFLAGS_macro = \
+$(call c_source_expand_depends_macro,$(1)) : private CFLAGS += $(2)
+
+add_extra_CXXFLAGS_macro = \
+$(call cxx_source_expand_depends_macro,$(1)) : private CXXFLAGS += $(2)
+
+add_extra_ASFLAGS_macro = \
+$(call asm_source_expand_depends_macro,$(1)) : private ASFLAGS+=$(2)
+
+#
+# Macros for adding extra flags on a specific program
+#
+add_extra_LDFLAGS_macro = $(1:%=$(BIN)/%) : private LDFLAGS+=$(2)
+
+add_extra_LIBS_macro = $(1:%=$(BIN)/%) : private LIBS += $(2)
+
+
+#
+# Macros for changing the source file tool
+#
+change_CC_macro = $(call c_source_expand_depends_macro,$(1)) : private CC:=$(2)
+change_CXX_macro = $(call cxx_source_expand_depends_macro,$(1)) : private CXX:=$(2)
+change_AS_macro = $(call asm_source_expand_depends_macro,$(1)) : private AS:=$(2)
+
+
+#
+# Common source dependency template for programs and static libraries
+#
+define common_source_dependency_template =
+
+# Do not include dependencies with the clean target
+ifneq ($(MAKECMDGOALS),clean)
+
+$(foreach c_source, $(${1}_C_SOURCES),\
+$(eval $(call c_source_dependency_file_macro,$(c_source))))
+include $$(${1}_C_SOURCES:%.c=$(OBJ)/%.d)
+
+$(foreach cxx_source, $(${1}_CXX_SOURCES),\
+$(eval $(call cxx_source_dependency_file_macro,$(cxx_source))))
+include $$(${1}_CXX_SOURCES:%.cc=$(OBJ)/%.d)
+
+$(foreach asm_source, $(${1}_ASM_SOURCES),\
+$(eval $(call asm_source_dependency_file_macro,$(asm_source))))
+include $$(${1}_ASM_SOURCES:%.s=$(OBJ)/%.d)
+
+endif
+
+endef # common_source_dependency_template
+
+#
+# Template for building static libraries
+#
+
+define static_library_template =
+
+$(call common_source_dependency_template,$(strip ${1}))
+
+$$(OBJ)/$(strip ${1}).a: \
+$$(${1}_ASM_SOURCES:%.s=$(OBJ)/%.o) \
+$$(${1}_CXX_SOURCES:%.cc=$(OBJ)/%.o) \
+$$(${1}_C_SOURCES:%.c=$(OBJ)/%.o) | $$(OBJ)
+	$$(AR) $$(ARFLAGS) $$@ $$^
+	$$(RANLIB) $$@
+    
+endef # static_library_template
+
+#
+# Template for building programs
+#
+
+static_library_depends_macro = \
+$(BIN)/${1} : $(${1}_STATIC_LIBRARIES:%=$(OBJ)/%) | $(OBJ)
+
+define program_template =
+
+$(call common_source_dependency_template,$(strip ${1}))
+
+$(call static_library_depends_macro,$(strip ${1}))
+
+$$(BIN)/$(strip ${1}) : \
+$$(${1}_ASM_SOURCES:%.s=$(OBJ)/%.o) \
+$$(${1}_CXX_SOURCES:%.cc=$(OBJ)/%.o) \
+$$(${1}_C_SOURCES:%.c=$(OBJ)/%.o) \
+$$(${1}_STATIC_LIBRARIES:%=$(OBJ)/%) | $(BIN)
+	$$(LD) $$(LDFLAGS) -o $$@ \
+	$$(${1}_ASM_SOURCES:%.s=$(OBJ)/%.o) \
+	$$(${1}_CXX_SOURCES:%.cc=$(OBJ)/%.o) \
+	$$(${1}_C_SOURCES:%.c=$(OBJ)/%.o) \
+	-Wl,--start-group \
+	$$(${1}_STATIC_LIBRARIES:%=$(OBJ)/%) \
+	$$(LIBS) \
+	-Wl,--end-group 
+
+.PHONY: $(strip ${1})
+$(strip ${1}) : $$(BIN)/$(strip ${1})
+
+endef # program_template
+
+#
+# Common dependencies
+#
+
+# Include the per-directory targets for documentation, source files and 
+# programs. These are usually src/src.mk and doc/doc.mk. Include them
+# here so that the included .mk files can use the templates defined above.
+#
+$(foreach source_dir, $(SOURCE_DIRS), \
+$(eval $(call source_dir_include_macro,$(source_dir))))
+
+# Include the per-program targets
+$(foreach program, $(PROGRAMS), $(eval $(call program_template,$(program))))
+
+# Include the per-static-library targets
+$(foreach static_library, $(STATIC_LIBRARIES),\
+$(eval $(call static_library_template,$(static_library))))
+
+# Makefile targets for documentation (see docs/docs.rules and docs/docs.mk)
+$(foreach documentation, $(DOCUMENTATION),\
+$(eval $(call documentation_template,$(documentation))))
+
+# To print a make variable: "make print-VARIABLE"
+print-% : ; $(info $* is a $(flavor $*) variable set to [$($*)]) @true
+
+# Common targets that use the variables defined in the included dependencies
+.PHONY: $(OBJ)
+$(OBJ) :
+	-@mkdir -p $(OBJ)
+
+.PHONY: $(BIN)
+$(BIN) :
+	-@mkdir -p $(BIN)
+
+.PHONY: clean
+clean :
+	-@for file in $(CLEAN_FILES) ; do \
+		if test -f $$file; then rm -f $$file ; fi \
+	done
+	-@for dir in $(CLEAN_DIRS) ; do \
+		if test -d $$dir; then rm -Rf $$dir ; fi \
+	done
+	-@for suf in $(CLEAN_SUFFIXES) ; do \
+		find . -name \*$$suf -exec rm -Rf \{\} ';' ; \
+	done
+
+.PHONY: gitignore
+gitignore:
+	-rm -f .gitignore
+	echo $(CLEAN_SUFFIXES:%="*"%) > .gitignore
+	echo $(CLEAN_FILES) >> .gitignore	
+	echo $(CLEAN_DIRS) >> .gitignore
+	sed -i -e "s/\ /\n/g" .gitignore
+
+.PHONY: backup
+backup: clean
+	(tarname=`basename $$PWD` && cd .. && \
+	 tar -chjvf ~/$$tarname"."`date +%I%M%p%d%b%y`.tbz $$tarname)
+
+.PHONY: programs
+programs : $(PROGRAMS:%=$(BIN)/%)
+
+.PHONY: docs
+docs :
+
+.PHONY: all
+all : programs docs
+

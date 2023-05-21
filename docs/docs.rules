@@ -1,0 +1,24 @@
+define documentation_type_template
+
+$(eval $(call $(strip ${2})_documentation_template, $(strip ${1})))
+
+.PHONY: docs
+docs : $(strip ${1})_$(strip ${2})
+
+endef # documentation_type_template
+
+
+define documentation_template =
+
+$(foreach type, $(DOCUMENTATION_TYPES), \
+$(eval $(call documentation_type_template, $(strip ${1}), $(strip $(type)))))
+
+endef # documentation_template
+
+
+.PHONY: cleandocs
+cleandocs:
+
+.PHONY: clean
+clean : cleandocs
+
