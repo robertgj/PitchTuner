@@ -36,9 +36,8 @@ namespace SimpleAudio
   template <typename C>
   struct saSampleFromSource
   {
-    saSample operator()(const C& s)
+    saSample operator()([[maybe_unused]] const C& s)
     {
-      (void)s;
       throw std::domain_error("no source conversion exists for this type");
     }
   };
@@ -59,9 +58,8 @@ namespace SimpleAudio
   template <typename C>
   struct saSampleToSink
   {
-    C operator()(const saSample& s)
+    C operator()([[maybe_unused]] const saSample& s)
     {
-      (void)s;
       throw std::domain_error("no sink conversion exists for this type");
     }
   };

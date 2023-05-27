@@ -103,7 +103,6 @@ void producer_fn(C& cbuf, binary_semaphore& bs, std::size_t sz, T * inbuf)
           std::this_thread::sleep_for(10us);
         }
     }
-  (void)total_num_written;
 }
 
 template < typename C, typename T>
@@ -168,7 +167,6 @@ void consumer_fn
             }
         }
 #if 0
-      (void)magic;
       if (num_read > 0)
         {
           std::cout << "total_num_read : " << total_num_read
@@ -187,7 +185,6 @@ void consumer_fn
 #endif
       
     };
-  (void)total_num_read;
 }
 
 void test_instantiation(void)

@@ -92,7 +92,7 @@ namespace SimpleAudio
     std::size_t samplesPerFragment;
 
     /// Bytes per fragment
-    std::size_t bytesPerFragment;
+    [[maybe_unused]] std::size_t bytesPerFragment;
 
     /// Frames written to sink 
     std::size_t framesWrittenToSink;
@@ -125,8 +125,6 @@ namespace SimpleAudio
       sinkBuffer( samplesPerFragment, 0 ),
       outputFile( sinkName.c_str(), std::ios::binary )
   {
-    (void)bytesPerFragment;
-
     // Check the input file
     if ( !outputFile.good() )
       {

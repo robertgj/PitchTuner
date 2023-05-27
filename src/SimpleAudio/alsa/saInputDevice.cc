@@ -40,7 +40,7 @@ namespace SimpleAudio
 
     /// \brief Release fragment storage
     /// \param fragment 
-    void Release(const saInputFragment fragment) { (void) fragment; }
+    void Release([[maybe_unused]] const saInputFragment fragment) { }
 
     /// \brief Clear the source. Assumes only one stream opens the device.
     void Clear( ) { isOverRun = false; }
@@ -150,10 +150,6 @@ namespace SimpleAudio
       sourcePtr( &(sourceBuffer[0]) ),
       debug( _debug )
   {
-    (void)bytesPerFrame;
-    (void)bytesPerFragment;  
-    (void)debug;
-  
     // Open the input device
     int err = snd_pcm_open(&handle, 
                            sourceName.c_str(), 

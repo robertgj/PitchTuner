@@ -91,7 +91,7 @@ $(function() {
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="comment">// \return saInputFragment </span></div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <a class="code hl_typedef" href="classSimpleAudio_1_1saInputSource.html#a30b0fc7d7b61849d906c7678bd2df915">saInputFragment</a> <a class="code hl_function" href="classSimpleAudio_1_1saInputDevice.html#a7fc369c7168a62e09a62d6fd23ce94d6">Collect</a>(std::size_t&amp; numValid);</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classSimpleAudio_1_1saInputDevice.html#ac2a1229775d9d89332aab71127211dda">   43</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSimpleAudio_1_1saInputDevice.html#ac2a1229775d9d89332aab71127211dda">Release</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="classSimpleAudio_1_1saInputSource.html#a30b0fc7d7b61849d906c7678bd2df915">saInputFragment</a> fragment) { (void) fragment; }</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classSimpleAudio_1_1saInputDevice.html#ac2a1229775d9d89332aab71127211dda">   43</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSimpleAudio_1_1saInputDevice.html#ac2a1229775d9d89332aab71127211dda">Release</a>([[maybe_unused]] <span class="keyword">const</span> <a class="code hl_typedef" href="classSimpleAudio_1_1saInputSource.html#a30b0fc7d7b61849d906c7678bd2df915">saInputFragment</a> fragment) { }</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classSimpleAudio_1_1saInputDevice.html#aa71d36872f416feaa853788a7a7a7ef8">   46</a></span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classSimpleAudio_1_1saInputDevice.html#aa71d36872f416feaa853788a7a7a7ef8">Clear</a>( ) { <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#ae567527ffe763f2f994673f62dd32882">isOverRun</a> = <span class="keyword">false</span>; }</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
@@ -167,190 +167,186 @@ $(function() {
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>      sourcePtr( &amp;(sourceBuffer[0]) ),</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>      debug( _debug )</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  {</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    (void)<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#aa293aebae1d4b9e06ff481e475dfaf2a">bytesPerFrame</a>;</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    (void)<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#acf90c2ffa96ed9f77b515e385fe174b5">bytesPerFragment</a>;  </div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    (void)<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a398527b3e9e358c345c5047b16871957">debug</a>;</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  </div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="comment">// Open the input device</span></div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keywordtype">int</span> err = snd_pcm_open(&amp;<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, </div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                           <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a47d2a9f9414abbbe97269d26e804baf0">sourceName</a>.c_str(), </div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                           SND_PCM_STREAM_CAPTURE, </div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                           0);</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keywordflow">if</span> (err &lt; 0) </div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>      {</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;can&#39;t open audio device: &quot;</span>) +</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                                 std::string(snd_strerror(err)));</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>      }</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                   </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    snd_pcm_hw_params_t *hw_params;</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params_malloc (&amp;hw_params)) &lt; 0) </div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>      {</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        snd_config_update_free_global();</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        <span class="keywordflow">throw</span> std::runtime_error</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>          (std::string(<span class="stringliteral">&quot;can&#39;t alloc. hardware parameters structure: &quot;</span>) +</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>           std::string(snd_strerror(err)));</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>      }</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                                 </div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params_any (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, hw_params)) &lt; 0) </div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>      {</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>        snd_pcm_hw_params_free (hw_params);</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        snd_config_update_free_global();</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        <span class="keywordflow">throw</span> std::runtime_error</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>          (std::string(<span class="stringliteral">&quot;cannot initialize hardware parameter structure: &quot;</span>) +</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>           std::string(snd_strerror(err)));</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>      }</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        </div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params_set_access </div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>         (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, hw_params, SND_PCM_ACCESS_RW_INTERLEAVED)) &lt; 0) </div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>      {</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        snd_pcm_hw_params_free (hw_params);</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        snd_config_update_free_global();</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;cannot set access type: &quot;</span>) +</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                                 std::string(snd_strerror(err))); </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>      }</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keywordflow">if</span> ( (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a63fa34ae3b005768dd342d3fe21652d8">bytesPerSample</a> != <span class="keyword">sizeof</span>(int16_t)) ||</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>         std::is_unsigned&lt;saSourceType&gt;() )</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>      {</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        snd_pcm_hw_params_free (hw_params);</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        snd_config_update_free_global();</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;source sample inconsistent&quot;</span>);</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>      }</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params_set_format</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>         (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, hw_params, SND_PCM_FORMAT_S16_LE)) &lt; 0) </div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>      {</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        snd_pcm_hw_params_free (hw_params);</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        snd_config_update_free_global();</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;cannot set sample format: &quot;</span>) +</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                                 std::string(snd_strerror(err))); </div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>      }</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        </div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> snd_framesPerSecond = (<span class="keywordtype">unsigned</span> int) <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a4bb714956637f606700c1c3174662ee3">framesPerSecond</a>;</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params_set_rate_near </div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>         (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, hw_params, &amp;snd_framesPerSecond, 0)) &lt; 0) </div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>      {</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        snd_pcm_hw_params_free (hw_params);</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        snd_config_update_free_global();</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;cannot set sample rate: &quot;</span>) +</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                                 std::string(snd_strerror(err))); </div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>      }</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>     </div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> snd_samplesPerFrame = (<span class="keywordtype">unsigned</span> int) <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a4c476dbe5c17572af2d3f009afa9a00e">samplesPerFrame</a>;</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params_set_channels </div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>         (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, hw_params, snd_samplesPerFrame)) &lt; 0) </div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>      {</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        snd_pcm_hw_params_free (hw_params);</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        snd_config_update_free_global();</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;cannot set channel count: &quot;</span>) +</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                                 std::string(snd_strerror(err))); </div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>      }</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        </div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, hw_params)) &lt; 0) </div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>      {</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        snd_pcm_hw_params_free (hw_params);</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        snd_config_update_free_global();</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;cannot set parameters: &quot;</span>) +</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                                 std::string(snd_strerror(err))); </div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>      }</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    snd_pcm_hw_params_free (hw_params);</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    </div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    <span class="keywordflow">if</span> ((err = snd_pcm_prepare (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>)) &lt; 0) </div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>      {</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        snd_config_update_free_global();</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        <span class="keywordflow">throw</span> std::runtime_error</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>          (std::string(<span class="stringliteral">&quot;cannot prepare audio interface for use: &quot;</span>) +</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>           std::string(snd_strerror(err)));</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>      }</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>  }</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno"><a class="line" href="classSimpleAudio_1_1saInputDevice.html#a2269ae38ca4e72335d97159c5f0b830c">  258</a></span>  <a class="code hl_function" href="classSimpleAudio_1_1saInputDevice.html#a2269ae38ca4e72335d97159c5f0b830c">saInputDevice::~saInputDevice</a>( ) throw()</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>  { </div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    <span class="keywordflow">try</span></div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>      {</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        <span class="comment">// Close device</span></div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        snd_config_update_free_global();</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="comment">// Open the input device</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keywordtype">int</span> err = snd_pcm_open(&amp;<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, </div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                           <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a47d2a9f9414abbbe97269d26e804baf0">sourceName</a>.c_str(), </div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                           SND_PCM_STREAM_CAPTURE, </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                           0);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keywordflow">if</span> (err &lt; 0) </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>      {</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;can&#39;t open audio device: &quot;</span>) +</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                                 std::string(snd_strerror(err)));</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>      }</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                   </div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    snd_pcm_hw_params_t *hw_params;</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params_malloc (&amp;hw_params)) &lt; 0) </div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>      {</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        snd_config_update_free_global();</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        <span class="keywordflow">throw</span> std::runtime_error</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>          (std::string(<span class="stringliteral">&quot;can&#39;t alloc. hardware parameters structure: &quot;</span>) +</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>           std::string(snd_strerror(err)));</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>      }</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                                 </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params_any (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, hw_params)) &lt; 0) </div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>      {</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        snd_pcm_hw_params_free (hw_params);</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        snd_config_update_free_global();</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        <span class="keywordflow">throw</span> std::runtime_error</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>          (std::string(<span class="stringliteral">&quot;cannot initialize hardware parameter structure: &quot;</span>) +</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>           std::string(snd_strerror(err)));</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>      }</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        </div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params_set_access </div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>         (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, hw_params, SND_PCM_ACCESS_RW_INTERLEAVED)) &lt; 0) </div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>      {</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        snd_pcm_hw_params_free (hw_params);</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        snd_config_update_free_global();</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;cannot set access type: &quot;</span>) +</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                                 std::string(snd_strerror(err))); </div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>      }</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span> </div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    <span class="keywordflow">if</span> ( (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a63fa34ae3b005768dd342d3fe21652d8">bytesPerSample</a> != <span class="keyword">sizeof</span>(int16_t)) ||</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>         std::is_unsigned&lt;saSourceType&gt;() )</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>      {</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        snd_pcm_hw_params_free (hw_params);</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        snd_config_update_free_global();</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;source sample inconsistent&quot;</span>);</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>      }</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params_set_format</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>         (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, hw_params, SND_PCM_FORMAT_S16_LE)) &lt; 0) </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>      {</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        snd_pcm_hw_params_free (hw_params);</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        snd_config_update_free_global();</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;cannot set sample format: &quot;</span>) +</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                                 std::string(snd_strerror(err))); </div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>      }</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        </div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> snd_framesPerSecond = (<span class="keywordtype">unsigned</span> int) <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a4bb714956637f606700c1c3174662ee3">framesPerSecond</a>;</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params_set_rate_near </div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>         (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, hw_params, &amp;snd_framesPerSecond, 0)) &lt; 0) </div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>      {</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        snd_pcm_hw_params_free (hw_params);</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        snd_config_update_free_global();</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;cannot set sample rate: &quot;</span>) +</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                                 std::string(snd_strerror(err))); </div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>      }</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>     </div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> snd_samplesPerFrame = (<span class="keywordtype">unsigned</span> int) <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a4c476dbe5c17572af2d3f009afa9a00e">samplesPerFrame</a>;</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params_set_channels </div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>         (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, hw_params, snd_samplesPerFrame)) &lt; 0) </div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>      {</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        snd_pcm_hw_params_free (hw_params);</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        snd_config_update_free_global();</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;cannot set channel count: &quot;</span>) +</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                                 std::string(snd_strerror(err))); </div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>      }</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        </div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    <span class="keywordflow">if</span> ((err = snd_pcm_hw_params (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, hw_params)) &lt; 0) </div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>      {</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        snd_pcm_hw_params_free (hw_params);</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        snd_config_update_free_global();</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;cannot set parameters: &quot;</span>) +</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                                 std::string(snd_strerror(err))); </div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>      }</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    snd_pcm_hw_params_free (hw_params);</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    </div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="keywordflow">if</span> ((err = snd_pcm_prepare (<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>)) &lt; 0) </div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>      {</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        snd_config_update_free_global();</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="keywordflow">throw</span> std::runtime_error</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>          (std::string(<span class="stringliteral">&quot;cannot prepare audio interface for use: &quot;</span>) +</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>           std::string(snd_strerror(err)));</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>      }</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>  }</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span> </div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno"><a class="line" href="classSimpleAudio_1_1saInputDevice.html#a2269ae38ca4e72335d97159c5f0b830c">  254</a></span>  <a class="code hl_function" href="classSimpleAudio_1_1saInputDevice.html#a2269ae38ca4e72335d97159c5f0b830c">saInputDevice::~saInputDevice</a>( ) throw()</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>  { </div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    <span class="keywordflow">try</span></div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>      {</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>        <span class="comment">// Close device</span></div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        snd_pcm_close(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>);</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        snd_config_update_free_global();</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>      }</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <span class="keywordflow">catch</span>(std::exception&amp; excpt)</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>      {</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        std::cerr &lt;&lt; excpt.what() &lt;&lt; std::endl ; </div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>      }</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    <span class="keywordflow">catch</span>(std::exception&amp; excpt)</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>      {</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        std::cerr &lt;&lt; excpt.what() &lt;&lt; std::endl ; </div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>      }</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>  }</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno"><a class="line" href="namespaceSimpleAudio.html#a3202bd39d0a8f45abbc2da94200bcdfa">  272</a></span>  <span class="keyword">static</span> std::size_t <a class="code hl_function" href="namespaceSimpleAudio.html#a3202bd39d0a8f45abbc2da94200bcdfa">saInputDeviceRead</a>(snd_pcm_t* handle,</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>                                       <a class="code hl_typedef" href="classSimpleAudio_1_1saInputSource.html#a3ebf4aae2042d26020e7396b24a937ef">saInputSource::saSourceType</a>* buffer, </div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>                                       <span class="keyword">const</span> std::size_t framesToRead,</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>                                       <span class="keywordtype">bool</span>&amp; isOverRun)</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>  {</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    <span class="keywordtype">long</span> numRead = snd_pcm_readi(handle, buffer, framesToRead);</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    <span class="keywordtype">int</span> err = (int)numRead;</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    <span class="keywordflow">if</span> (err == -EPIPE) </div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>      {</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        numRead = 0;</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        isOverRun = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>      }</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (err == -EBADFD) </div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>      {</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        numRead = 0;</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        <span class="keywordflow">throw</span> std::runtime_error</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>          ( std::string(<span class="stringliteral">&quot;audio input device read failed: &quot;</span>) + </div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>            std::string(<span class="stringliteral">&quot;PCM is not in the right state&quot;</span>) );</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>      }</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (err == -ESTRPIPE) </div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>      {</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        numRead = 0;</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        <span class="keywordflow">throw</span> std::runtime_error</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>          ( std::string(<span class="stringliteral">&quot;audio input device read failed: &quot;</span>) + </div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>            std::string(<span class="stringliteral">&quot;a suspend event occurred&quot;</span>) );</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>      }</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (err &lt; 0)</div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>      {</div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        numRead = 0;</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        <span class="keywordflow">throw</span> std::runtime_error</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>          ( std::string(<span class="stringliteral">&quot;audio input device read failed: &quot;</span>) + </div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>            std::string(snd_strerror(err))); </div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>      }</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(numRead);</div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>  }</div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span> </div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno"><a class="line" href="classSimpleAudio_1_1saInputDevice.html#a7fc369c7168a62e09a62d6fd23ce94d6">  310</a></span>  <a class="code hl_typedef" href="classSimpleAudio_1_1saInputSource.html#a30b0fc7d7b61849d906c7678bd2df915">saInputSource::saInputFragment</a> <a class="code hl_function" href="classSimpleAudio_1_1saInputDevice.html#a7fc369c7168a62e09a62d6fd23ce94d6">saInputDevice::Collect</a>(std::size_t&amp; numValid)</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>  {</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>    <span class="comment">// Read from device into this fragment</span></div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    std::size_t framesRead = </div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>      <a class="code hl_function" href="namespaceSimpleAudio.html#a3202bd39d0a8f45abbc2da94200bcdfa">saInputDeviceRead</a>(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a2d10e3995f9904b133c0c52714357f1a">sourcePtr</a>, <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8f448117bfc7cb5c4f88dfcdf7e0f29b">framesPerFragment</a>, <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#ae567527ffe763f2f994673f62dd32882">isOverRun</a>);</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    </div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    <span class="comment">// Done</span></div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    numValid = framesRead;</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#ae013aa60188eb692528e01255190d78b">framesReadFromDevice</a> += numValid;</div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a2d10e3995f9904b133c0c52714357f1a">sourcePtr</a>;</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>  }</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span> </div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno"><a class="line" href="namespaceSimpleAudio.html#af94c75c6323caf374e6d95b395f5db92">  322</a></span>  <a class="code hl_class" href="classSimpleAudio_1_1saInputSource.html">saInputSource</a>* <a class="code hl_function" href="namespaceSimpleAudio.html#af94c75c6323caf374e6d95b395f5db92">saInputSourceOpenDevice</a>(<span class="keyword">const</span> std::string&amp; deviceName, </div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>                                         <span class="keyword">const</span> std::size_t framesPerSecond,</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>                                         <span class="keyword">const</span> std::size_t msDeviceLatency,</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                                         <span class="keyword">const</span> std::size_t channels,</div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                                         <span class="keyword">const</span> <span class="keywordtype">bool</span> debug)</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>  {</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code hl_class" href="classSimpleAudio_1_1saInputDevice.html">saInputDevice</a></div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>      (deviceName, framesPerSecond, msDeviceLatency, channels, debug);</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>  }</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span> </div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>}</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>  }</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno"><a class="line" href="namespaceSimpleAudio.html#a3202bd39d0a8f45abbc2da94200bcdfa">  268</a></span>  <span class="keyword">static</span> std::size_t <a class="code hl_function" href="namespaceSimpleAudio.html#a3202bd39d0a8f45abbc2da94200bcdfa">saInputDeviceRead</a>(snd_pcm_t* handle,</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>                                       <a class="code hl_typedef" href="classSimpleAudio_1_1saInputSource.html#a3ebf4aae2042d26020e7396b24a937ef">saInputSource::saSourceType</a>* buffer, </div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>                                       <span class="keyword">const</span> std::size_t framesToRead,</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>                                       <span class="keywordtype">bool</span>&amp; isOverRun)</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>  {</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="keywordtype">long</span> numRead = snd_pcm_readi(handle, buffer, framesToRead);</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span> </div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="keywordtype">int</span> err = (int)numRead;</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    <span class="keywordflow">if</span> (err == -EPIPE) </div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>      {</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        numRead = 0;</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        isOverRun = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>      }</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (err == -EBADFD) </div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>      {</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>        numRead = 0;</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>        <span class="keywordflow">throw</span> std::runtime_error</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>          ( std::string(<span class="stringliteral">&quot;audio input device read failed: &quot;</span>) + </div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>            std::string(<span class="stringliteral">&quot;PCM is not in the right state&quot;</span>) );</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>      }</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (err == -ESTRPIPE) </div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>      {</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>        numRead = 0;</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>        <span class="keywordflow">throw</span> std::runtime_error</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>          ( std::string(<span class="stringliteral">&quot;audio input device read failed: &quot;</span>) + </div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>            std::string(<span class="stringliteral">&quot;a suspend event occurred&quot;</span>) );</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>      }</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (err &lt; 0)</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>      {</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        numRead = 0;</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        <span class="keywordflow">throw</span> std::runtime_error</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>          ( std::string(<span class="stringliteral">&quot;audio input device read failed: &quot;</span>) + </div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>            std::string(snd_strerror(err))); </div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>      }</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span> </div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(numRead);</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>  }</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span> </div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno"><a class="line" href="classSimpleAudio_1_1saInputDevice.html#a7fc369c7168a62e09a62d6fd23ce94d6">  306</a></span>  <a class="code hl_typedef" href="classSimpleAudio_1_1saInputSource.html#a30b0fc7d7b61849d906c7678bd2df915">saInputSource::saInputFragment</a> <a class="code hl_function" href="classSimpleAudio_1_1saInputDevice.html#a7fc369c7168a62e09a62d6fd23ce94d6">saInputDevice::Collect</a>(std::size_t&amp; numValid)</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>  {</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    <span class="comment">// Read from device into this fragment</span></div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>    std::size_t framesRead = </div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>      <a class="code hl_function" href="namespaceSimpleAudio.html#a3202bd39d0a8f45abbc2da94200bcdfa">saInputDeviceRead</a>(<a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">handle</a>, <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a2d10e3995f9904b133c0c52714357f1a">sourcePtr</a>, <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a8f448117bfc7cb5c4f88dfcdf7e0f29b">framesPerFragment</a>, <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#ae567527ffe763f2f994673f62dd32882">isOverRun</a>);</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    </div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>    <span class="comment">// Done</span></div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    numValid = framesRead;</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#ae013aa60188eb692528e01255190d78b">framesReadFromDevice</a> += numValid;</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classSimpleAudio_1_1saInputDevice.html#a2d10e3995f9904b133c0c52714357f1a">sourcePtr</a>;</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>  }</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span> </div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno"><a class="line" href="namespaceSimpleAudio.html#af94c75c6323caf374e6d95b395f5db92">  318</a></span>  <a class="code hl_class" href="classSimpleAudio_1_1saInputSource.html">saInputSource</a>* <a class="code hl_function" href="namespaceSimpleAudio.html#af94c75c6323caf374e6d95b395f5db92">saInputSourceOpenDevice</a>(<span class="keyword">const</span> std::string&amp; deviceName, </div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>                                         <span class="keyword">const</span> std::size_t framesPerSecond,</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>                                         <span class="keyword">const</span> std::size_t msDeviceLatency,</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>                                         <span class="keyword">const</span> std::size_t channels,</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>                                         <span class="keyword">const</span> <span class="keywordtype">bool</span> debug)</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>  {</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code hl_class" href="classSimpleAudio_1_1saInputDevice.html">saInputDevice</a></div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>      (deviceName, framesPerSecond, msDeviceLatency, channels, debug);</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>  }</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>}</div>
 <div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html">SimpleAudio::saInputDevice</a></div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00025">saInputDevice.cc:26</a></div></div>
 <div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a0c3119d9dc6890504ac6976cbfa45f3c"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a0c3119d9dc6890504ac6976cbfa45f3c">SimpleAudio::saInputDevice::OverRun</a></div><div class="ttdeci">bool OverRun()</div><div class="ttdoc">Check for source over-runs.</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00050">saInputDevice.cc:50</a></div></div>
 <div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a204ec625ee56564d0cb5b822a0ecc815"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a204ec625ee56564d0cb5b822a0ecc815">SimpleAudio::saInputDevice::EndOfSource</a></div><div class="ttdeci">bool EndOfSource()</div><div class="ttdoc">Check a simple audio input device for end-of-data (Only makes sense for files).</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00055">saInputDevice.cc:55</a></div></div>
-<div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a2269ae38ca4e72335d97159c5f0b830c"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a2269ae38ca4e72335d97159c5f0b830c">SimpleAudio::saInputDevice::~saInputDevice</a></div><div class="ttdeci">~saInputDevice()</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00258">saInputDevice.cc:258</a></div></div>
+<div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a2269ae38ca4e72335d97159c5f0b830c"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a2269ae38ca4e72335d97159c5f0b830c">SimpleAudio::saInputDevice::~saInputDevice</a></div><div class="ttdeci">~saInputDevice()</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00254">saInputDevice.cc:254</a></div></div>
 <div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a2a3464be6327318c47b4ef78737859a6"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a2a3464be6327318c47b4ef78737859a6">SimpleAudio::saInputDevice::samplesPerFragment</a></div><div class="ttdeci">std::size_t samplesPerFragment</div><div class="ttdoc">Samples per fragment.</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00113">saInputDevice.cc:113</a></div></div>
 <div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a2d10e3995f9904b133c0c52714357f1a"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a2d10e3995f9904b133c0c52714357f1a">SimpleAudio::saInputDevice::sourcePtr</a></div><div class="ttdeci">saInputFragment sourcePtr</div><div class="ttdoc">Use this to access source buffer.</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00125">saInputDevice.cc:125</a></div></div>
 <div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a360590ad5fee05c08899764f9d2e7052"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a360590ad5fee05c08899764f9d2e7052">SimpleAudio::saInputDevice::GetFramesPerSource</a></div><div class="ttdeci">std::size_t GetFramesPerSource() const</div><div class="ttdoc">Get device frames per source.</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00071">saInputDevice.cc:71</a></div></div>
@@ -364,7 +360,7 @@ $(function() {
 <div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a63fa34ae3b005768dd342d3fe21652d8"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a63fa34ae3b005768dd342d3fe21652d8">SimpleAudio::saInputDevice::bytesPerSample</a></div><div class="ttdeci">std::size_t bytesPerSample</div><div class="ttdoc">Number of bytes in a sample.</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00098">saInputDevice.cc:98</a></div></div>
 <div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a67747a1bf83ea99c019c64a10e9b0d83"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a67747a1bf83ea99c019c64a10e9b0d83">SimpleAudio::saInputDevice::GetSamplesPerFrame</a></div><div class="ttdeci">std::size_t GetSamplesPerFrame() const</div><div class="ttdoc">Get samples per frame.</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00063">saInputDevice.cc:63</a></div></div>
 <div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a700c811f2950f35b20eb663cf65372b9"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a700c811f2950f35b20eb663cf65372b9">SimpleAudio::saInputDevice::saInputDevice</a></div><div class="ttdeci">saInputDevice(const std::string name, const std::size_t fps, const std::size_t ms, const std::size_t channels, const bool debug)</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00131">saInputDevice.cc:131</a></div></div>
-<div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a7fc369c7168a62e09a62d6fd23ce94d6"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a7fc369c7168a62e09a62d6fd23ce94d6">SimpleAudio::saInputDevice::Collect</a></div><div class="ttdeci">saInputFragment Collect(std::size_t &amp;numValid)</div><div class="ttdoc">Collect a fragment from a simple audio input queue.</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00310">saInputDevice.cc:310</a></div></div>
+<div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a7fc369c7168a62e09a62d6fd23ce94d6"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a7fc369c7168a62e09a62d6fd23ce94d6">SimpleAudio::saInputDevice::Collect</a></div><div class="ttdeci">saInputFragment Collect(std::size_t &amp;numValid)</div><div class="ttdoc">Collect a fragment from a simple audio input queue.</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00306">saInputDevice.cc:306</a></div></div>
 <div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a8530736c0c7f7f4dc724c8246e301f83"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a8530736c0c7f7f4dc724c8246e301f83">SimpleAudio::saInputDevice::handle</a></div><div class="ttdeci">snd_pcm_t * handle</div><div class="ttdoc">Device handle.</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00095">saInputDevice.cc:95</a></div></div>
 <div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a8f448117bfc7cb5c4f88dfcdf7e0f29b"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a8f448117bfc7cb5c4f88dfcdf7e0f29b">SimpleAudio::saInputDevice::framesPerFragment</a></div><div class="ttdeci">std::size_t framesPerFragment</div><div class="ttdoc">Frames per fragment.</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00104">saInputDevice.cc:104</a></div></div>
 <div class="ttc" id="aclassSimpleAudio_1_1saInputDevice_html_a96c467233318c86119fb60d52f36ffb5"><div class="ttname"><a href="classSimpleAudio_1_1saInputDevice.html#a96c467233318c86119fb60d52f36ffb5">SimpleAudio::saInputDevice::framesPerSource</a></div><div class="ttdeci">std::size_t framesPerSource</div><div class="ttdoc">Number of frames stored in the source.</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00116">saInputDevice.cc:116</a></div></div>
@@ -381,8 +377,8 @@ $(function() {
 <div class="ttc" id="aclassSimpleAudio_1_1saInputSource_html_a30b0fc7d7b61849d906c7678bd2df915"><div class="ttname"><a href="classSimpleAudio_1_1saInputSource.html#a30b0fc7d7b61849d906c7678bd2df915">SimpleAudio::saInputSource::saInputFragment</a></div><div class="ttdeci">saSourceType * saInputFragment</div><div class="ttdoc">Pointer to an array of values from the input source.</div><div class="ttdef"><b>Definition:</b> <a href="saInputSource_8h_source.html#l00024">saInputSource.h:24</a></div></div>
 <div class="ttc" id="aclassSimpleAudio_1_1saInputSource_html_a3ebf4aae2042d26020e7396b24a937ef"><div class="ttname"><a href="classSimpleAudio_1_1saInputSource.html#a3ebf4aae2042d26020e7396b24a937ef">SimpleAudio::saInputSource::saSourceType</a></div><div class="ttdeci">saDeviceType saSourceType</div><div class="ttdef"><b>Definition:</b> <a href="saInputSource_8h_source.html#l00021">saInputSource.h:21</a></div></div>
 <div class="ttc" id="anamespaceSimpleAudio_html"><div class="ttname"><a href="namespaceSimpleAudio.html">SimpleAudio</a></div><div class="ttdef"><b>Definition:</b> <a href="saCircBuff_8h_source.html#l00018">saCircBuff.h:19</a></div></div>
-<div class="ttc" id="anamespaceSimpleAudio_html_a3202bd39d0a8f45abbc2da94200bcdfa"><div class="ttname"><a href="namespaceSimpleAudio.html#a3202bd39d0a8f45abbc2da94200bcdfa">SimpleAudio::saInputDeviceRead</a></div><div class="ttdeci">static std::size_t saInputDeviceRead(snd_pcm_t *handle, saInputSource::saSourceType *buffer, const std::size_t framesToRead, bool &amp;isOverRun)</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00272">saInputDevice.cc:272</a></div></div>
-<div class="ttc" id="anamespaceSimpleAudio_html_af94c75c6323caf374e6d95b395f5db92"><div class="ttname"><a href="namespaceSimpleAudio.html#af94c75c6323caf374e6d95b395f5db92">SimpleAudio::saInputSourceOpenDevice</a></div><div class="ttdeci">saInputSource * saInputSourceOpenDevice(const std::string &amp;deviceName, const std::size_t framesPerSecond, const std::size_t msLatency, const std::size_t channels=1, const bool debug=false)</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00322">saInputDevice.cc:322</a></div></div>
+<div class="ttc" id="anamespaceSimpleAudio_html_a3202bd39d0a8f45abbc2da94200bcdfa"><div class="ttname"><a href="namespaceSimpleAudio.html#a3202bd39d0a8f45abbc2da94200bcdfa">SimpleAudio::saInputDeviceRead</a></div><div class="ttdeci">static std::size_t saInputDeviceRead(snd_pcm_t *handle, saInputSource::saSourceType *buffer, const std::size_t framesToRead, bool &amp;isOverRun)</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00268">saInputDevice.cc:268</a></div></div>
+<div class="ttc" id="anamespaceSimpleAudio_html_af94c75c6323caf374e6d95b395f5db92"><div class="ttname"><a href="namespaceSimpleAudio.html#af94c75c6323caf374e6d95b395f5db92">SimpleAudio::saInputSourceOpenDevice</a></div><div class="ttdeci">saInputSource * saInputSourceOpenDevice(const std::string &amp;deviceName, const std::size_t framesPerSecond, const std::size_t msLatency, const std::size_t channels=1, const bool debug=false)</div><div class="ttdef"><b>Definition:</b> <a href="saInputDevice_8cc_source.html#l00318">saInputDevice.cc:318</a></div></div>
 <div class="ttc" id="asaInputSource_8h_html"><div class="ttname"><a href="saInputSource_8h.html">saInputSource.h</a></div><div class="ttdoc">Abstract base class for a simple audio input.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

@@ -82,7 +82,7 @@ namespace SimpleAudio
 
     /// \brief Release fragment storage
     /// \param fragment 
-    void Release(saInputFragment fragment) { (void) fragment; } 
+    void Release([[maybe_unused]] saInputFragment fragment) { } 
 
     /// \brief Clear the source
     void Clear( ) { };
@@ -139,10 +139,10 @@ namespace SimpleAudio
     std::size_t samplesPerFragment;
 
     /// Bytes per fragment
-    std::size_t bytesPerFragment;
+    [[maybe_unused]] std::size_t bytesPerFragment;
 
     /// Maximum number of bytes stored in the source
-    std::size_t bytesPerSource;
+    [[maybe_unused]] std::size_t bytesPerSource;
 
     /// Frames per source
     std::size_t framesPerSource;
@@ -171,9 +171,6 @@ namespace SimpleAudio
       sourceBuffer( samplesPerFragment ),
       rff( sourceName.c_str() )
   {
-    (void)bytesPerSource;
-    (void)bytesPerFragment;  
-    
     if ( !rff.is_ok() )
       {
         throw std::runtime_error("can't open source file");

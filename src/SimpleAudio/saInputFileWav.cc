@@ -31,7 +31,7 @@ namespace SimpleAudio
 
     /// \brief Release fragment storage
     /// \param fragment 
-    void Release(saInputFragment fragment) { (void) fragment; } 
+    void Release([[maybe_unused]] saInputFragment fragment) { } 
 
     /// \brief Clear the source
     void Clear( ) {};
@@ -123,8 +123,6 @@ namespace SimpleAudio
       framesReadFromSource( 0 ),
       sourceBuffer( samplesPerFragment, 0 )
   {
-    (void)bytesPerSource;
-
     // Read the header
     inputFile.read((char *)wavHeader, sizeof(saWavHeader));
     if ( !inputFile.good() ) 

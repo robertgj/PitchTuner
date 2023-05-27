@@ -184,9 +184,8 @@ namespace SimpleAudio
   template<typename T> 
   struct saSwapSample 
   {
-    void operator() (T& x) 
+    void operator() ([[maybe_unused]] T& x) 
     {
-      (void)x;
       throw std::logic_error("can't swap sample size");
     }
   };

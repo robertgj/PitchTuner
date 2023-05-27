@@ -212,10 +212,6 @@ int main(int argc, char* argv[])
           framesReadSoFar += framesReadThisRead;
           framesWrittenSoFar += framesWrittenThisWrite;          
         }
-
-      // Done.
-      (void)framesReadSoFar;
-      (void)framesWrittenSoFar;
     }
   catch(std::exception& excpt)
     {
