@@ -68,6 +68,9 @@ saOutputStreamFile_test_CXX_SOURCES := saOutputStreamFile_test.cc
 $(call add_extra_CXXFLAGS_macro, $(libSimpleAudio_CXX_SOURCES), \
 -Isrc/SimpleAudio -Isrc/SimpleAudio/include)
 
+$(call add_extra_CXXFLAGS_macro, \
+saOutputStreamFile_test.cc saCircBuff_test.cc, -Wno-unused-but-set-variable)
+
 $(foreach test, $(SimpleAudio_PROGRAMS), \
 $(eval $(call add_extra_CXXFLAGS_macro, $(${test}_CXX_SOURCES), \
 -Isrc/SimpleAudio -Isrc/SimpleAudio/include)))

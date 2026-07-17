@@ -66,7 +66,7 @@ and Language Processing, Vol. 20, No. 6, August 2012, pp. 1759-1770.
          \text{ otherwise}
       \end{array}\right.\f]
   Benefits:
-   - reduces ``too high'' errors
+   - reduces ``too high`` errors
    - don't need upper frequency limit on search to avoid zero-lag dip
    - normalises for next step
 

@@ -444,8 +444,8 @@ void test_threaded_int16_write_and_int16_read(void)
   std::thread producer(producer_fn<saCircBuff_16_16_Def_F_F,int16_t>,
                        std::ref(cbuf),
                        std::ref(bs),
-                       std::ref(sz),
-                       std::ref(inbuf));
+                       sz,
+                       inbuf);
 
   constexpr std::size_t sz_on_2=sz/2;
   int16_t outbuf[sz_on_2];
@@ -457,8 +457,8 @@ void test_threaded_int16_write_and_int16_read(void)
   std::thread consumer(consumer_fn<saCircBuff_16_16_Def_F_F,int16_t>,
                        std::ref(cbuf),
                        std::ref(bs),
-                       std::ref(outbuf),
-                       std::ref(sz_on_2),
+                       outbuf,
+                       sz_on_2,
                        double(inbuf[0]) - double(inbuf[sz-1]));
 
   producer.join();

@@ -16,7 +16,6 @@ docs/doxygen/project_number.cfg
 /*.abc
 /*.mid
 /*.wav
-/*.png
 /*.txt
 /*.tex
 /*.md

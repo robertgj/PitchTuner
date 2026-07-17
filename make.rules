@@ -170,10 +170,10 @@ EXTRA_CFLAGS:= -Wstrict-prototypes -Wbad-function-cast -Wnested-externs
 # The following are not accepted by clang
 EXTRA_CFLAGS+=-Wformat-truncation -fanalyzer # -Wanalyzer-too-complex
 
-CFLAGS:=-std=c17 $(OPTIM) $(COMMON_CFLAGS) $(EXTRA_CFLAGS)
+CFLAGS:=-std=c23 $(OPTIM) $(COMMON_CFLAGS) $(EXTRA_CFLAGS)
 
 # g++ -fanalyzer is still experimental!
-CXXFLAGS:=-std=c++20 $(OPTIM) $(COMMON_CFLAGS)
+CXXFLAGS:=-std=c++23 $(OPTIM) $(COMMON_CFLAGS)
 
 ASFLAGS:=$(OPTIM)
 
